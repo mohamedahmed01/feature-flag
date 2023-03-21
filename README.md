@@ -20,14 +20,17 @@
             'description' => 'Test feature flag',
         ]);
     $featureFlag->save();
+    
     //using the flag to scope your your code using if condition or any other way you like
     if ($featureFlag->isEnabled()) {
         // Implement the feature for the user
     }
-     //or you can use the method Targted and checking the audience to match to specific audience
-        if($featureFlag->isTargeted() && in_array($user->id, $featureFlag->getAudience())) {
-            // Implement the feature for the user
-        }
+
+    //or you can use the method Targted and checking the audience to match to specific audience
+    if($featureFlag->isTargeted() && in_array($user->id, $featureFlag->getAudience())) {
+        // Implement the feature for the user
+    }
+
     //then simply call feature-flag:manage followed by the name of your flag to enable Or disable it 
     php artisan feature-flag:manage {flag : The name of the feature flag} 
     {--enable : Enable the feature flag} {--disable : Disable the feature flag}
