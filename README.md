@@ -10,8 +10,24 @@
 
 ## Introduction
 
-**Feature Flag** is the easiest way to enable and disable features on your different enviroments it also enable you to do A/B testing and supporting your **users** with **different** features sets.
+**Feature Flag** is the easiest way to enable and disable features on your different **Laravel** enviroments it also enable you to do A/B testing and supporting your **users** with **different** features sets.
 
+## Installtion 
+
+- Adding the package using composer 
+
+``` php
+    composer require mohamedahmed01/feature-flag
+```
+- publishing configuration 
+``` php
+    php artisan vendor:publish --provider="Mohamedahmed01\FeatureFlag\FeatureFlagServiceProvider" --tag="config"
+```
+- Facade is automatically loaded using composer unless you have laravel version < 5.4
+ you will need to add the facade manually in config/app.php
+ ``` php
+    'FeatureFlag'=> Mohamedahmed01\FeatureFlag\FeatureFlagFacade::class
+```
 ## Usage
 ``` php
     //Feature Flagging can be simple done by creating the flag
