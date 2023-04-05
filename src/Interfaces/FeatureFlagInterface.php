@@ -56,4 +56,11 @@ interface FeatureFlagInterface
      * @return void
      */
     public function setAudience(?array $audience): void;
+
+    /**
+     * Check if the feature flag is enabled.
+     *
+     * @return bool
+     */
+    public function isEnabledForUser($user): bool;
 }

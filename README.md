@@ -47,6 +47,17 @@
         // Implement the feature for the user
     }
 
+    //Feature Flagging can be also used to target users based on percentage
+    $featureFlag = new FeatureFlag([
+            'name' => 'test',
+            'description' => 'Test feature flag',
+            'percentage'=>50
+        ]);
+    $featureFlag->save();
+    // you can use the method isEnabledForUser and checking the audience to match to specific audience i.e 50%
+    if($featureFlag->isEnabledForUser($user)) {
+        // Implement the feature for the user
+    }
     //then simply call feature-flag:manage followed by the name of your flag to enable Or disable it 
     php artisan feature-flag:manage {flag : The name of the feature flag} 
     {--enable : Enable the feature flag} {--disable : Disable the feature flag}
@@ -69,6 +80,7 @@
 | Targted() | check if the flag has specific audience |
 | setAudience(array) | set the flag audience by sending array of user's id's i.e [1,2,3,4] |
 | getAudience() | get the audience id's of the users for this flag |
+| isEnabledForUser($user) | check random user for falling within the percentage |
 ## Contributing
 
 Thank you for considering contributing to Pint! You can read the contribution guide [here](.github/CONTRIBUTING.md).

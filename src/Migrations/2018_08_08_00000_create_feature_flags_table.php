@@ -13,6 +13,7 @@ class CreateFeatureFlagsTable extends Migration
             $table->string('name')->unique();
             $table->string('description');
             $table->boolean('enabled')->default(false);
+            $table->float('percentage', 8, 2)->nullable();
             $table->json('audience')->nullable();
             $table->timestamps();
         });

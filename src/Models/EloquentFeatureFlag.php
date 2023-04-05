@@ -10,7 +10,7 @@ class EloquentFeatureFlag extends Model implements FeatureFlagInterface
     protected $casts = [
         'audience' => 'array',
     ];
-    protected $fillable = ['name', 'description', 'enabled', 'audience'];
+    protected $fillable = ['name', 'description', 'enabled', 'audience', 'percentage'];
     /**
      * Get the unique name of the feature flag.
      *
@@ -98,5 +98,12 @@ class EloquentFeatureFlag extends Model implements FeatureFlagInterface
     public function audience()
     {
         return $this->belongsToMany(User::class);
+    }
+
+    public function isEnabledForUser($user): bool
+    {
+        $hash = md5($user->id);
+        $decimal = hexdec(substr($hash, 0, 8)) / pow(16, 8);
+        return $decimal <= ($this->percentage / 100);
     }
 }

@@ -53,4 +53,29 @@ class EloquentFeatureFlagTest extends TestCase
 
         $this->assertEquals(['users' => [4, 5, 6]], $featureFlag->getAudience());
     }
+
+    public function testIsEnabledForUser()
+    {
+        $featureFlag = new EloquentFeatureFlag([
+            'name' => 'test',
+            'description' => 'Test feature flag',
+            'percentage' => 50
+        ]);
+
+        $users = [];
+        for ($i = 1; $i < 101; $i++) {
+            $users[] = (object) ['id' => $i];
+        }
+
+        $enabledCount = 0;
+        foreach ($users as $user) {
+            if ($featureFlag->isEnabledForUser($user)) {
+                $enabledCount++;
+            }
+        }
+
+        $expectedEnabledCount = $featureFlag->percentage / 100 * count($users);
+        $this->assertGreaterThanOrEqual($expectedEnabledCount - 5, $enabledCount);
+        $this->assertLessThanOrEqual($expectedEnabledCount + 5, $enabledCount);
+    }
 }
