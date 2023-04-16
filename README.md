@@ -3,7 +3,6 @@
 
 <p align="center">
     <a href="https://github.com/mohamedahmed01/feature-flag/actions"><img src="https://github.com/mohamedahmed01/feature-flag/actions/workflows/main.yml/badge.svg" alt="Build Status"></a>
-    <a href="https://packagist.org/packages/mohamedahmed01/feature-flag"><img src="https://img.shields.io/packagist/dt/mohamedahmed01/feature-flag" alt="Total Downloads"></a>
     <a href="https://packagist.org/packages/mohamedahmed01/feature-flag"><img src="https://img.shields.io/packagist/v/mohamedahmed01/feature-flag" alt="Latest Stable Version"></a>
     <a href="https://packagist.org/packages/mohamedahmed01/feature-flag"><img src="https://img.shields.io/packagist/l/mohamedahmed01/feature-flag" alt="License"></a>
 </p>
