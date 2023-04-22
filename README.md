@@ -57,6 +57,17 @@
     if($featureFlag->isEnabledForUser($user)) {
         // Implement the feature for the user
     }
+    //Feature Flagging can be also used to flag based on datetime 
+    $featureFlag = new FeatureFlag([
+            'name' => 'test flag',
+            'finish_date' => '01/04/2023',
+            'enabled' => true,
+        ]);
+    $featureFlag->save();
+    // you can use the env either to throw an exception or send a notification when flag expires
+    if($featureFlag->isEnabled()) {
+        // Implement the feature for the user
+    }
     //then simply call feature-flag:manage followed by the name of your flag to enable Or disable it 
     php artisan feature-flag:manage {flag : The name of the feature flag} 
     {--enable : Enable the feature flag} {--disable : Disable the feature flag}
@@ -66,6 +77,8 @@
 | Config Name | Description |
 | --- | --- |
 | FEATURE_FLAG_DRIVER | Allow you to change the backend driver currently support eleqount|
+| FEATURE_FLAG_FINISH_DATE_ACTION | Choose What to do when a date based feature flag expires options "exception,notification"|
+| FEATURE_FLAG_NOTIFICATION_EMAIL | set the email to receive on notifications in case you used notification option|
 
 
 ### Methods :
@@ -82,7 +95,7 @@
 | isEnabledForUser($user) | check random user for falling within the percentage |
 ## Contributing
 
-Thank you for considering contributing to Pint! You can read the contribution guide [here](.github/CONTRIBUTING.md).
+Thank you for considering contributing to Feature-Flag! You can read the contribution guide [here](.github/CONTRIBUTING.md).
 
 ### Testing
 

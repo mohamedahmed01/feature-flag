@@ -3,6 +3,8 @@ namespace Mohamedahmed01\FeatureFlag\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Mohamedahmed01\FeatureFlag\Interfaces\FeatureFlagInterface;
+use Mohamedahmed01\FeatureFlag\Notifications\ExpiredFeatureFlagNotification;
+use Illuminate\Support\Facades\Notification;
 
 class EloquentFeatureFlag extends Model implements FeatureFlagInterface
 {
@@ -10,7 +12,10 @@ class EloquentFeatureFlag extends Model implements FeatureFlagInterface
     protected $casts = [
         'audience' => 'array',
     ];
-    protected $fillable = ['name', 'description', 'enabled', 'audience', 'percentage'];
+    protected $fillable = ['name', 'description', 'enabled', 'audience', 'percentage', 'finish_date'];
+    protected $dates = [
+        'finish_date',
+    ];
     /**
      * Get the unique name of the feature flag.
      *
@@ -38,7 +43,25 @@ class EloquentFeatureFlag extends Model implements FeatureFlagInterface
      */
     public function isEnabled(): bool
     {
-        return (bool) $this->enabled;
+        if ($this->enabled && $this->finish_date && $this->finish_date->isPast()) {
+            $action = config('feature_flag.finish_date_action');
+            if ($action == 'exception') {
+                throw new \Exception('Feature flag ' . $this->name . ' has expired');
+            } else {
+                $this->notifyIfExpired();
+            }
+        }
+
+        return $this->enabled;
+    }
+
+    public function notifyIfExpired()
+    {
+        if ($this->enabled && $this->finish_date && $this->finish_date->isPast()) {
+            $email = config('feature_flag.notification_email');
+            Notification::route('mail', $email)
+                ->notify(new ExpiredFeatureFlagNotification($this));
+        }
     }
 
     /**

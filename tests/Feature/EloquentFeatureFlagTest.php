@@ -1,10 +1,14 @@
 <?php
 namespace Tests\Feature;
 
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Notification;
 use Mohamedahmed01\FeatureFlag\Tests\TestCase;
+use Illuminate\Notifications\AnonymousNotifiable;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Mohamedahmed01\FeatureFlag\Models\EloquentFeatureFlag;
 use Mohamedahmed01\FeatureFlag\Interfaces\FeatureFlagInterface;
+use Mohamedahmed01\FeatureFlag\Notifications\ExpiredFeatureFlagNotification;
 
 class EloquentFeatureFlagTest extends TestCase
 {
@@ -78,4 +82,60 @@ class EloquentFeatureFlagTest extends TestCase
         $this->assertGreaterThanOrEqual($expectedEnabledCount - 5, $enabledCount);
         $this->assertLessThanOrEqual($expectedEnabledCount + 5, $enabledCount);
     }
+    /** @test */
+    public function itChecksIfFeatureFlagIsEnabled()
+    {
+        $flag = new EloquentFeatureFlag([
+            'name' => 'test flag',
+            'finish_date' => Carbon::now()->addDay(),
+            'enabled' => true,
+        ]);
+
+        $this->assertTrue($flag->isEnabled());
+    }
+
+    /** @test */
+    public function itThrowsExceptionIfFeatureFlagHasExpired()
+    {
+        $flag = new EloquentFeatureFlag([
+            'name' => 'test flag',
+            'finish_date' => Carbon::now()->subDay(),
+            'enabled' => true,
+        ]);
+
+        $this->expectException(\Exception::class);
+        $flag->isEnabled();
+    }
+
+    /** @test */
+    public function itSendsNotificationIfFeatureFlagHasExpired()
+    {
+        Notification::fake();
+
+        $flag = new EloquentFeatureFlag([
+            'name' => 'test flag',
+            'finish_date' => Carbon::now()->subDay(),
+            'enabled' => true,
+        ]);
+
+        $flag->notifyIfExpired();
+
+        Notification::assertSentTo(new AnonymousNotifiable(), ExpiredFeatureFlagNotification::class);
+    }
+
+    /** @test */
+    public function itSendsNotificationIfFeatureFlagHasExpiredUsingConfig()
+    {
+        Notification::fake();
+
+        $flag = new EloquentFeatureFlag([
+            'name' => 'test flag',
+            'finish_date' => Carbon::now()->subDay(),
+            'enabled' => true,
+        ]);
+        config(['feature_flag.finish_date_action' => 'notification']);
+        $flag->isEnabled();
+        Notification::assertSentTo(new AnonymousNotifiable(), ExpiredFeatureFlagNotification::class);
+    }
+
 }
