@@ -20,6 +20,7 @@
     },
     "require-dev": {
         "orchestra/testbench": "^5.0|^6.0",
+        "laravel/legacy-factories": "^1.0",
         "phpunit/phpunit": "^9.0"
     },
     "autoload": {
@@ -29,7 +30,8 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Mohamedahmed01\\FeatureFlag\\Tests\\": "tests"
+            "Mohamedahmed01\\FeatureFlag\\Tests\\": "tests",
+            "Mohamedahmed01\\FeatureFlag\\Database\\Factories\\":"database/factories"
         }
     },
     "scripts": {

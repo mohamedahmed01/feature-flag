@@ -129,4 +129,14 @@ class EloquentFeatureFlag extends Model implements FeatureFlagInterface
         $decimal = hexdec(substr($hash, 0, 8)) / pow(16, 8);
         return $decimal <= ($this->percentage / 100);
     }
+
+    /**
+     * Create a new factory instance for the model.
+     *
+     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     */
+    protected static function newFactory()
+    {
+        return \Mohamedahmed01\FeatureFlag\Database\Factories\EloquentFeatureFlagFactory::new();
+    }
 }

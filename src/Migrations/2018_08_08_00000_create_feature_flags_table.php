@@ -10,12 +10,14 @@ class CreateFeatureFlagsTable extends Migration
     {
         Schema::create('feature_flags', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->unique();
+            $table->string('name');
             $table->string('description');
             $table->boolean('enabled')->default(false);
             $table->float('percentage', 8, 2)->nullable();
             $table->json('audience')->nullable();
+            $table->dateTime('finish_date')->nullable();
             $table->timestamps();
+            
         });
     }
 
